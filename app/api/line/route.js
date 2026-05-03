@@ -1,20 +1,38 @@
-export async function POST(req) {
-  const body = await req.json();
+async function replyMessage(replyToken, text) {
+  let message;
 
-  const events = body.events;
-
-  for (const event of events) {
-    if (event.type === "message") {
-      const userMessage = event.message.text;
-
-      await replyMessage(event.replyToken, userMessage);
-    }
+  if (text.includes("จอง")) {
+    message = {
+      type: "text",
+      text: "เลือกประเภทการฝากน้องหมาได้เลยค่ะ 🐶",
+      quickReply: {
+        items: [
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "🏠 ไป-กลับ (250 บาท)",
+              text: "ไป-กลับ"
+            }
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "🌙 ค้างคืน (600 บาท)",
+              text: "ค้างคืน"
+            }
+          }
+        ]
+      }
+    };
+  } else {
+    message = {
+      type: "text",
+      text: "พิมพ์ 'จอง' เพื่อเริ่มใช้บริการนะคะ 💛"
+    };
   }
 
-  return new Response("OK");
-}
-
-async function replyMessage(replyToken, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
@@ -23,12 +41,7 @@ async function replyMessage(replyToken, text) {
     },
     body: JSON.stringify({
       replyToken,
-      messages: [
-        {
-          type: "text",
-          text: `หนูพิมพ์ว่า: ${text} 🐶`
-        }
-      ]
+      messages: [message]
     })
   });
 }
