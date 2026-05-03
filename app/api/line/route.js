@@ -15,14 +15,14 @@ export async function POST(req) {
 }
 
 async function replyMessage(replyToken, text) {
-  const response = await fetch("https://api.line.me/v2/bot/message/reply", {
+  await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`
     },
     body: JSON.stringify({
-      replyToken: replyToken,
+      replyToken,
       messages: [
         {
           type: "text",
@@ -31,6 +31,4 @@ async function replyMessage(replyToken, text) {
       ]
     })
   });
-
-  return response.json();
 }
