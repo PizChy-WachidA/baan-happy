@@ -1,3 +1,17 @@
+export async function POST(req) {
+  const body = await req.json();
+  const events = body.events;
+
+  for (const event of events) {
+    if (event.type === "message") {
+      const userMessage = event.message.text;
+      await replyMessage(event.replyToken, userMessage);
+    }
+  }
+
+  return new Response("OK");
+}
+
 async function replyMessage(replyToken, text) {
   let message;
 
@@ -29,7 +43,7 @@ async function replyMessage(replyToken, text) {
   } else {
     message = {
       type: "text",
-      text: "พิมพ์ 'จอง' เพื่อเริ่มใช้บริการนะคะ 💛"
+      text: `หนูพิมพ์ว่า: ${text} 🐶`
     };
   }
 
